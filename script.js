@@ -50,16 +50,17 @@ function formatNumber(num) {
 }
 
 // ------------------- AUDIO -------------------
-const clickSound = new Audio('https://cdn.pixabay.com/download/audio/2025/09/08/audio_399898.mp3'); // placeholder click
-const buySound = new Audio('https://cdn.pixabay.com/download/audio/2025/09/08/audio_399898.mp3');   // placeholder buy
-const prestigeSound = new Audio('https://cdn.pixabay.com/download/audio/2025/09/08/audio_399898.mp3'); // placeholder prestige
-const bgMusic = new Audio('https://cdn.pixabay.com/download/audio/2025/09/08/audio_399898.mp3');
+const clickSound = new Audio('https://cdn.pixabay.com/download/audio/2025/09/08/audio_399898.mp3');
+const buySound = new Audio('https://cdn.pixabay.com/download/audio/2025/09/08/audio_399898.mp3');
+const prestigeSound = new Audio('https://cdn.pixabay.com/download/audio/2025/09/08/audio_399898.mp3');
+
+// ✅ Local background music
+const bgMusic = new Audio('game-8-bit-399898.mp3');
 bgMusic.loop = true;
-bgMusic.volume = 0.2;
+bgMusic.volume = 0; // start at 0 for fade-in
 
 // ------------------- STORE ITEMS -------------------
 const storeItems = [
-  // Early-game / normal items
   {name: "Green Cursor", baseCost: 50, type: "clickPower", value: 1, level: 0},
   {name: "Multiplier Upgrade", baseCost: 500, type: "multiplier", value: 0.5, level: 0},
   {name: "Pro Hacker", baseCost: 3000, type: "clickPower", value: 5, level: 0},
@@ -69,33 +70,7 @@ const storeItems = [
   {name: "Exotic Clicker", baseCost: 1000000, type: "clickPower", value: 2500, level: 0},
   {name: "Cyber Hacker", baseCost: 5000000, type: "clickPower", value: 12500, level: 0},
   {name: "AI Hacker", baseCost: 25000000, type: "clickPower", value: 60000, level: 0},
-  {name: "Quantum Hacker", baseCost: 100000000, type: "clickPower", value: 250000, level: 0},
-  {name: "Singularity Hacker", baseCost: 500000000, type: "clickPower", value: 1000000, level: 0},
-  {name: "Omega Hacker", baseCost: 2500000000, type: "clickPower", value: 5000000, level: 0},
-
-  // Late-game items
-  {name: "Neon Hacker", baseCost: 10000000000, type: "clickPower", value: 25000000, level: 0},
-  {name: "Hyper Hacker", baseCost: 50000000000, type: "clickPower", value: 125000000, level: 0},
-  {name: "Galactic Hacker", baseCost: 250000000000, type: "clickPower", value: 600000000, level: 0},
-  {name: "Cosmic Hacker", baseCost: 1000000000000, type: "clickPower", value: 2500000000, level: 0},
-  {name: "Infinity Hacker", baseCost: 5000000000000, type: "clickPower", value: 12500000000, level: 0},
-  {name: "Eternal Hacker", baseCost: 25000000000000, type: "clickPower", value: 60000000000, level: 0},
-  {name: "Omni Hacker", baseCost: 100000000000000, type: "clickPower", value: 250000000000, level: 0},
-  {name: "Ultimate Hacker", baseCost: 500000000000000, type: "clickPower", value: 1250000000000, level: 0},
-  {name: "Transcendent Hacker", baseCost: 2500000000000000, type: "clickPower", value: 6000000000000, level: 0},
-  {name: "Godlike Hacker", baseCost: 10000000000000000, type: "clickPower", value: 25000000000000, level: 0},
-
-  // Ultra late-game / over-the-top items
-  {name: "Reality Hacker", baseCost: 100000000000000000, type: "clickPower", value: 1000000000000000, level: 0},
-  {name: "Time-Bender Hacker", baseCost: 500000000000000000, type: "clickPower", value: 5000000000000000, level: 0},
-  {name: "Dimensional Hacker", baseCost: 2500000000000000000, type: "clickPower", value: 25000000000000000, level: 0},
-  {name: "Multiverse Hacker", baseCost: 10000000000000000000, type: "clickPower", value: 100000000000000000, level: 0},
-  {name: "Singularity Overlord", baseCost: 50000000000000000000, type: "clickPower", value: 500000000000000000, level: 0},
-  {name: "Cosmic Entity Hacker", baseCost: 250000000000000000000, type: "clickPower", value: 2500000000000000000, level: 0},
-  {name: "Infinity Coder", baseCost: 1000000000000000000000, type: "clickPower", value: 10000000000000000000, level: 0},
-  {name: "Eternal Algorithm", baseCost: 5000000000000000000000, type: "clickPower", value: 50000000000000000000, level: 0},
-  {name: "God Algorithm", baseCost: 25000000000000000000000, type: "clickPower", value: 250000000000000000000, level: 0},
-  {name: "The Ultimate Hacker", baseCost: 100000000000000000000000, type: "clickPower", value: 1000000000000000000000, level: 0}
+  {name: "Quantum Hacker", baseCost: 100000000, type: "clickPower", value: 250000, level: 0}
 ];
 
 // ------------------- DOM ELEMENTS -------------------
@@ -189,10 +164,23 @@ setInterval(()=>{
   localStorage.setItem("hackerSave",JSON.stringify(save));
 },5000);
 
+// ------------------- MUSIC FADE-IN -------------------
+function fadeInMusic(audio, targetVolume = 0.2, duration = 4000) {
+  audio.volume = 0;
+  audio.play().catch(()=>console.log("Music blocked"));
+  const step = 0.01;
+  const interval = duration / (targetVolume / step);
+  const fade = setInterval(() => {
+    if (audio.volume < targetVolume) audio.volume = Math.min(audio.volume + step, targetVolume);
+    else clearInterval(fade);
+  }, interval);
+}
+
 // ------------------- START BUTTON -------------------
 document.getElementById("startBtn").addEventListener("click",()=>{
-  bgMusic.play().catch(()=>console.log("Music blocked"));
   document.getElementById("startOverlay").style.display="none";
   document.querySelector(".container").style.display="flex";
-  renderStore(); updateDisplay();
+  renderStore();
+  updateDisplay();
+  fadeInMusic(bgMusic, 0.2, 4000); // fade in music over 4 seconds
 });
