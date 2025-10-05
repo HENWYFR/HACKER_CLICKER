@@ -50,20 +50,12 @@ function formatNumber(num) {
 }
 
 // ------------------- AUDIO -------------------
-const bgMusic = document.getElementById("background-music");
-bgMusic.volume = 0.2;
-
-document.getElementById("playMusic").addEventListener("click", () => {
-  bgMusic.play().catch(() => console.log("Autoplay blocked, click Start first"));
-});
-document.getElementById("stopMusic").addEventListener("click", () => {
-  bgMusic.pause();
-});
-
-// Optional: other sounds
 const clickSound = new Audio('https://cdn.pixabay.com/download/audio/2025/09/08/audio_399898.mp3'); 
 const buySound = new Audio('https://cdn.pixabay.com/download/audio/2025/09/08/audio_399898.mp3');   
 const prestigeSound = new Audio('https://cdn.pixabay.com/download/audio/2025/09/08/audio_399898.mp3'); 
+const bgMusic = new Audio('https://cdn.pixabay.com/download/audio/2025/09/08/audio_399898.mp3');
+bgMusic.loop = true;
+bgMusic.volume = 0.2;
 
 // ------------------- STORE ITEMS -------------------
 const storeItems = [
@@ -77,6 +69,7 @@ const storeItems = [
   {name: "Cyber Hacker", baseCost: 5000000, type: "clickPower", value: 12500, level: 0},
   {name: "AI Hacker", baseCost: 25000000, type: "clickPower", value: 60000, level: 0},
   {name: "Quantum Hacker", baseCost: 100000000, type: "clickPower", value: 250000, level: 0}
+  // add more items if needed
 ];
 
 // ------------------- DOM ELEMENTS -------------------
@@ -172,8 +165,8 @@ setInterval(()=>{
 
 // ------------------- START BUTTON -------------------
 document.getElementById("startBtn").addEventListener("click",()=>{
+  bgMusic.play().catch(()=>console.log("Music blocked"));
   document.getElementById("startOverlay").style.display="none";
   document.querySelector(".container").style.display="flex";
-  renderStore();
-  updateDisplay();
+  renderStore(); updateDisplay();
 });
