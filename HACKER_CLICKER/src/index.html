@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hacker Clicker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div id="notifications"></div>
+
+<div id="startOverlay">
+  <h1>Hacker Clicker</h1>
+  <button id="startBtn">Start Game</button>
+</div>
+
+<div class="container" style="display:none;">
+  <div class="click-area">
+    <h1>Clicks: <span id="clicks">0</span></h1>
+    <button id="clickBtn">CLICK</button>
+    <div id="stats">
+      <p>Click Power: <span id="clickPower">1</span></p>
+      <p>Multiplier: x<span id="multiplier">1</span></p>
+      <p>Prestige Multiplier: x<span id="prestigeMulti">1</span></p>
+      <button id="prestigeBtn">PRESTIGE</button>
+    </div>
+  </div>
+
+  <div class="shop-area">
+    <h2>Shop</h2>
+    <div id="store"></div>
+  </div>
+</div>
+
+<script src="script.js" defer></script>
+</body>
+</html>
